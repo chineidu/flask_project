@@ -10,11 +10,12 @@ app = Flask(__name__)
 api = Api(app)
 
 db = SQLAlchemy()
-db.init_app(app)
 
 # set config
 app_settings = os.getenv("APP_SETTINGS")
 app.config.from_object(app_settings)
+
+db.init_app(app)
 
 
 class Users(db.Model):
