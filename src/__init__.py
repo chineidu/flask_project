@@ -31,5 +31,7 @@ def create_app(script_info=None):
 
 def _register_blueprint(app):
     from src.api.ping import ping_bp
+    from src.api.users import users_bp
 
     app.register_blueprint(ping_bp)
+    app.register_blueprint(users_bp)
