@@ -1,9 +1,10 @@
-from src import app, db
+from src import create_app, db
 from pytest import fixture
 
 
 @fixture(scope="module")
 def test_app():
+    app = create_app()
     with app.app_context():
         yield app  # testing happens here
 
