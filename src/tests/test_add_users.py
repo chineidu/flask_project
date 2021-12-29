@@ -1,4 +1,5 @@
 import json
+from src.api.models import Users
 from src.status import status_code
 
 
@@ -58,6 +59,7 @@ def test_add_user_duplicate_email(test_app, test_database):
     """This is used to test the addition of a user with an duplicate emails"""
     # Given
     with test_app.test_client() as client:
+
         # When
         response = client.post(
             "/users",
@@ -99,15 +101,21 @@ def test_single_user_incorrect_id(test_app, test_database, add_user):
         assert "User 999 does not exist" in data.get("message")
 
 
-# def test_all_users(test_app, test_database, add_user):
-#     add_user("michael", "michael@mherman.org")
-#     add_user("fletcher", "fletcher@notreal.com")
-#     with test_app.test_client() as client:
-#         response = client.get("/users")
-#         data = json.loads(response.data.decode("utf-8"))
-#         assert response.status_code == status_code.OK_200
-#         assert len(data) == 2
-#         assert "michael" in data[0].get("username")
-#         assert "michael@mherman.org" in data[0].get("email")
-#         assert "fletcher" in data[1].get("username")
-#         assert "fletcher@notreal.com" in data[1].get("email")
+def test_all_users(test_app, test_database, add_user):
+    # Given
+    test_database.session.query(Users).delete()  # ensures that the db is empty
+    add_user("michael", "michael@mherman.org")
+    add_user("fletcher", "fletcher@notreal.com")
+    with test_app.test_client() as client:
+
+        # When
+        response = client.get("/users")
+        data = json.loads(response.data.decode("utf-8"))
+
+        # Then
+        assert response.status_code == status_code.OK_200
+        assert len(data) == 2
+        assert "michael" in data[0].get("username")
+        assert "michael@mherman.org" in data[0].get("email")
+        assert "fletcher" in data[1].get("username")
+        assert "fletcher@notreal.com" in data[1].get("email")
