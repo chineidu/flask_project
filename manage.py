@@ -12,8 +12,21 @@ cli = FlaskGroup(
 
 @cli.command("recreate_db")
 def recreate_db():
+    """This is used to create a fresh database instance."""
     db.drop_all()
     db.create_all()
+    db.session.commit()
+
+@cli.command("populate_db")
+def populate_db():
+    """This is used to populate the database."""
+    db.drop_all()
+    db.create_all()
+
+    user_1 = Users(username="Neidu", email="neidu@email.com")
+    user_2 = Users(username="Stella", email="stella@email.com")
+    db.session.add(user_1)
+    db.session.add(user_2)
     db.session.commit()
 
 
