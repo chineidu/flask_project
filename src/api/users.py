@@ -30,7 +30,9 @@ class Users_(Resource):
         user = Users.query.filter_by(id=user_id).first()
         if not user:
             current_app.logger.debug("USER RETRIEVAL FAILED!")
-            return api.abort(404, f"User {user_id} does not exist")
+            return api.abort(
+                status_code.NOT_FOUND_404, f"User {user_id} does not exist"
+            )
 
         # else
         current_app.logger.info("USER SUCCESSFULLY RETRIEVED!")
