@@ -17,6 +17,7 @@ def recreate_db():
     db.create_all()
     db.session.commit()
 
+
 @cli.command("populate_db")
 def populate_db():
     """This is used to populate the database."""

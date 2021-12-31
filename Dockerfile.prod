@@ -1,0 +1,30 @@
+# official image
+FROM python:3.9.5-slim-buster
+
+# set workdir
+WORKDIR /usr/src/app
+
+# set env vars
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV FLASK_ENV production
+ENV APP_SETTINGS src.config.ProductionConfig
+
+# install sys dependencies
+RUN apt-get update \
+  && apt-get -y install netcat gcc postgresql \
+  && apt-get clean
+
+# install libraries
+COPY ./requirements.txt .
+RUN pip install -r requirements.txt
+
+# copy source code
+COPY . .
+
+# add and run as non-root user
+RUN adduser --disabled-password myuser
+USER myuser
+
+# run gunicorn
+CMD gunicorn --bind 0.0.0.0:$PORT manage:app
